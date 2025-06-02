@@ -69,36 +69,46 @@ function App() {
 
   return (
     <div id="App">
-      <img src={logo} id="logo" alt="logo" />
-      <div id="result" className="result">
+      <img
+        src={logo}
+        alt="logo"
+        className="w-28 h-auto mx-auto mt-10 mb-4 rounded-lg shadow-lg"
+      />
+      <div className="text-lg font-semibold text-center mb-6 text-white opacity-80">
         {resultText}
       </div>
-      <div className="button-container">
+      <div className="flex justify-center mb-8">
         <button
-          className={isScanning ? "btn stop" : "btn start"}
+          className={`px-6 py-2 rounded-md font-bold transition-colors duration-150 text-white ${
+            isScanning
+              ? "bg-red-600 hover:bg-red-700"
+              : "bg-blue-600 hover:bg-blue-700"
+          }`}
           onClick={isScanning ? stopScanning : startScanning}
         >
           {isScanning ? "Stop Scan" : "Start Scan"}
         </button>
       </div>
-      <div className="filter-panel">
-        <label style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-          <span>フィルタ</span>
-          <span className="switch">
+      <div className="flex items-center gap-4 bg-gray-800 border border-gray-700 rounded-xl shadow-md px-8 py-4 max-w-xl mx-auto mb-8 text-white">
+        <label className="flex items-center gap-2">
+          <span className="text-sm">フィルタ</span>
+          <span className="relative inline-block w-11 h-6 align-middle select-none">
             <input
               type="checkbox"
               checked={filterEnabled}
               onChange={(e) => setFilterEnabled(e.target.checked)}
+              className="sr-only peer"
             />
-            <span className="slider"></span>
+            <span className="block w-11 h-6 bg-gray-600 rounded-full peer-checked:bg-blue-500 transition-colors"></span>
+            <span className="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition-transform peer-checked:translate-x-5"></span>
           </span>
         </label>
         {filterEnabled && (
           <>
-            <span>RSSI閾値:</span>
-            <span>-</span>
+            <span className="text-sm">RSSI閾値:</span>
+            <span className="text-sm">-</span>
             <input
-              className="filter-input"
+              className="w-16 px-2 py-1 rounded bg-gray-900 border border-blue-500 text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
               type="number"
               step="1"
               value={rssiThreshold}
@@ -106,26 +116,35 @@ function App() {
                 setRssiThreshold(Math.floor(Number(e.target.value)))
               }
             />
-            <span>dBmより強い</span>
+            <span className="text-sm">dBmより強い</span>
           </>
         )}
       </div>
 
       {!isScanning && filteredDevices.length > 0 && (
-        <div className="devices-table">
-          <h3>Detected Devices:</h3>
-          <table>
+        <div className="bg-gray-800 rounded-xl shadow-lg p-6 max-w-3xl mx-auto">
+          <h3 className="text-xl font-bold text-white mb-4">
+            Detected Devices:
+          </h3>
+          <table className="min-w-full text-sm text-left text-white">
             <thead>
               <tr>
-                <th>Device Address</th>
-                <th>Average RSSI (dBm)</th>
+                <th className="px-4 py-2 bg-gray-700 rounded-tl-lg">
+                  Device Address
+                </th>
+                <th className="px-4 py-2 bg-gray-700 rounded-tr-lg">
+                  Average RSSI (dBm)
+                </th>
               </tr>
             </thead>
             <tbody>
               {filteredDevices.map((device) => (
-                <tr key={device.uuid}>
-                  <td>{device.uuid}</td>
-                  <td>{device.rssi.toFixed(2)}</td>
+                <tr
+                  key={device.uuid}
+                  className="hover:bg-gray-600 transition-colors"
+                >
+                  <td className="px-4 py-2 break-all">{device.uuid}</td>
+                  <td className="px-4 py-2">{device.rssi.toFixed(2)}</td>
                 </tr>
               ))}
             </tbody>
